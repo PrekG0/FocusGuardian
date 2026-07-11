@@ -50,7 +50,14 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('app:getStatus', async () => {
+  return {
+    appName: 'FocusGuardian',
+    message: 'Hello from FocusGuardian Main Process!',
+    electron: true,
+    timestamp: new Date().toLocaleTimeString()
+  }
+})
 
   createWindow()
 
