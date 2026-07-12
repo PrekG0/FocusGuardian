@@ -2,6 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { registerTrackerIPC } from './ipc/tracker';
+
 
 function createWindow(): void {
   // Create the browser window.
@@ -58,6 +60,8 @@ app.whenReady().then(() => {
     timestamp: new Date().toLocaleTimeString()
   }
 })
+
+  registerTrackerIPC();
 
   createWindow()
 

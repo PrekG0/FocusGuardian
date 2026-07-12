@@ -3,7 +3,9 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getStatus: () => ipcRenderer.invoke('app:getStatus')
+  getStatus: () => ipcRenderer.invoke('app:getStatus'),
+  getActiveWindow: () =>
+    ipcRenderer.invoke("tracker:getActiveWindow")
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

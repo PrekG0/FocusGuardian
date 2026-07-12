@@ -8,8 +8,14 @@ interface AppStatus {
   timestamp: string;
 }
 
+interface ActiveWindowInfo {
+  appName: string;
+  windowTitle: string;
+}
+
 function App() {
   const [status, setStatus] = useState<AppStatus | null>(null);
+  const [activeWindow, setActiveWindow] = useState<ActiveWindowInfo | null>(null);
 
   useEffect(() => {
     const loadStatus = async () => {
@@ -19,12 +25,19 @@ function App() {
         const response = await window.api.getStatus();
 
         setStatus(response);
+        // @ts-ignore
+        const activeWindowResponse = await window.api.getActiveWindow();
+
+        setActiveWindow(activeWindowResponse);
       } catch (error) {
         console.error(error);
       }
     };
 
     loadStatus();
+
+    const interval = setInterval(loadStatus, 1000);
+    return () => clearInterval(interval); 
   }, []);
 
   return (
@@ -56,18 +69,18 @@ function App() {
         </section>
 
         <section className="card">
-          <h2>Main Process</h2>
+          <h2>Current Activity</h2>
 
           <p>
             <strong>Application:</strong>{" "}
-            {status?.appName ?? "Loading..."}
+            {activeWindow?.appName ?? "Loading..."}
           </p>
 
           <br />
 
           <p>
-            <strong>Message:</strong>{" "}
-            {status?.message ?? "Loading..."}
+            <strong>Window:</strong>{" "}
+            {activeWindow?.windowTitle ?? "Loading..."}
           </p>
 
           <br />
