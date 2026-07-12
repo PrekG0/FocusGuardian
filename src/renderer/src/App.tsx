@@ -1,6 +1,32 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 
+interface AppStatus {
+  appName: string;
+  message: string;
+  electron: boolean;
+  timestamp: string;
+}
+
 function App() {
+  const [status, setStatus] = useState<AppStatus | null>(null);
+
+  useEffect(() => {
+    const loadStatus = async () => {
+      try {
+        // We'll properly type this later
+        // @ts-ignore
+        const response = await window.api.getStatus();
+
+        setStatus(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadStatus();
+  }, []);
+
   return (
     <main className="app">
       <div className="container">
@@ -24,20 +50,31 @@ function App() {
           </div>
 
           <div className="status">
-            <span>🟡 IPC</span>
-            <span>Coming Soon</span>
+            <span>{status ? "🟢" : "🟡"} IPC</span>
+            <span>{status ? "Connected" : "Connecting..."}</span>
           </div>
         </section>
 
         <section className="card">
-          <h2>Current Milestone</h2>
-
-          <p>Foundation Complete</p>
-
-          <hr />
+          <h2>Main Process</h2>
 
           <p>
-            <strong>Next:</strong> Desktop Activity Collection
+            <strong>Application:</strong>{" "}
+            {status?.appName ?? "Loading..."}
+          </p>
+
+          <br />
+
+          <p>
+            <strong>Message:</strong>{" "}
+            {status?.message ?? "Loading..."}
+          </p>
+
+          <br />
+
+          <p>
+            <strong>Last Updated:</strong>{" "}
+            {status?.timestamp ?? "--:--:--"}
           </p>
         </section>
       </div>

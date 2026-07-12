@@ -1,9 +1,9 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getStatus: () => window.electron.ipcRenderer.invoke('app:getStatus')
+  getStatus: () => ipcRenderer.invoke('app:getStatus')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
